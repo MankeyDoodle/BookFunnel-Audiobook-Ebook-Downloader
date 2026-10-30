@@ -2,9 +2,15 @@
 
 **Source code, issues and release notes: [https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader](https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader)**
 
-I paid for these books and wanted to read and listen to them in the apps I actually
-like. This script saves what you have bought on BookFunnel as ordinary files you
-keep, from your own logged-in session. No terminal, no re-encoding.
+I made this because the BookFunnel app has far fewer accessibility and quality-of-life features than the audiobook and ebook apps I use every day. It saves the books you have bought and can already open in your own BookFunnel account as ordinary files, so your own reader, screen reader or audiobook app can use them. No terminal, no re-encoding.
+
+### What this is, and what it is not
+
+- **A personal-use tool** for people with **their own BookFunnel account**. It only works while you are signed in to an account that already has the book.
+- **Not a hack or a security exploit.** It finds no vulnerability and does not decrypt, crack or defeat any encryption. It does not bypass a login, a payment or an access check. It uses the same addresses the BookFunnel page and player already load for your signed-in account in order to deliver or play the book, and saves what comes back.
+- **Not a way to share books.** It hosts and uploads nothing. Please do not share, resell or redistribute the files or the links.
+- **Not meant to undermine authors**, or to override an author's choice about downloads. Some authors offer a book only inside the BookFunnel app. This is for personal use and accessibility. If you would like a download for a book that has none, ask the author or BookFunnel support.
+- **Not affiliated with BookFunnel.**
 
 ### What it does
 
@@ -27,7 +33,7 @@ Titles, authors and covers are blurred or replaced.
 
 ![Your library, with red and green borders](https://raw.githubusercontent.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/main/docs/screenshots/library.jpg)
 
-![An audiobook saved as one .m4b](https://raw.githubusercontent.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/main/docs/screenshots/locked-audiobook-done.jpg)
+![An audiobook with no Download button, saved as one .m4b](https://raw.githubusercontent.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/main/docs/screenshots/locked-audiobook-done.jpg)
 
 ![Ebook panel with tick boxes](https://raw.githubusercontent.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/main/docs/screenshots/ebook-panel.jpg)
 
@@ -48,14 +54,9 @@ Step-by-step directions with a screenshot for each step are in the
 
 ### Good to know
 
-- You need your own BookFunnel account and books you have access to. It does not
-  bypass payment, and it reads only what the page already loads for you.
-- The script talks only to BookFunnel's own hosts and its storage hosts (the
-  `@connect` lines in the header).
-- It is for keeping and playing what you bought. Please respect authors.
-- A book with no Download button is the author's or publisher's choice. If you
-  would like one, it is worth asking them or BookFunnel support to enable
-  downloads; some authors do not realise readers want them.
-- Found a bug? Open an issue on
-  [GitHub](https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/issues).
-  Please do not paste cookies, signed links or your email.
+- Use it only with your own account, for books you have access to, for your own personal use on your own devices.
+- Terms and laws differ by country. Saving files may go against BookFunnel's terms or an author's or publisher's wishes for some titles. You are responsible for how you use this and for following the laws and terms that apply to you. This is not legal advice.
+- The script talks only to BookFunnel's own hosts and its storage hosts (the `@connect` lines in the header). It sends your data nowhere else.
+- Provided "as is" under the MIT license, without warranty.
+- Authors, publishers or BookFunnel with a concern: please [open an issue](https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/issues) or contact me through my GitHub profile. I will read it and respond.
+- Found a bug? Open an issue on [GitHub](https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/issues). Please do not paste cookies, signed links or your email.

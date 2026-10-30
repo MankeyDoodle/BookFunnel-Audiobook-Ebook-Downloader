@@ -5,18 +5,49 @@
 <p align="center">
   <a href="https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/actions/workflows/ci.yml"><img src="https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/actions/workflows/ci.yml/badge.svg" alt="tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
-  <img src="https://img.shields.io/badge/version-1.0.1-14695b.svg" alt="version 1.0.1">
+  <img src="https://img.shields.io/badge/version-1.0.2-14695b.svg" alt="version 1.0.2">
   <img src="https://img.shields.io/badge/tested%20with-Tampermonkey-00485B.svg" alt="tested with Tampermonkey">
 </p>
 
 # BookFunnel Audiobook + Ebook Downloader
 
-**Version 1.0.1** (first public release: 1.0.0).
+**Version 1.0.2** (first public release: 1.0.0).
 
 Save the books you **bought** from BookFunnel as ordinary files you keep:
 audiobooks as one chaptered `.m4b` (or `.mp3`, or titled chapter files), ebooks
 and PDFs exactly as BookFunnel serves them. It works from your own logged-in
 session, needs no terminal, and does not re-encode anything.
+
+## What this is, and what it is not
+
+I made this because the BookFunnel app has far fewer accessibility and
+quality-of-life features than the audiobook and ebook apps I use every day, and I
+wanted to read and listen to books I had paid for in the apps that work for me.
+
+**It is**
+- a tool for **personal use** by people who have **their own BookFunnel account**;
+- a way to save a book you can already open and play in that account as an
+  ordinary file, so your own reader, screen reader or audiobook app can use it;
+- open source, with no server: everything runs in your own browser.
+
+**It is not**
+- **a hack or a security exploit.** It finds no vulnerability and does not
+  decrypt, crack or defeat any encryption. It does not bypass a login, a payment
+  or an access check: it only works while you are signed in to an account that
+  already has the book;
+- reaching into anything your account cannot already open. The addresses it
+  uses are the ones the BookFunnel page and player already load for your
+  signed-in account, because they need them to deliver or play the book. The
+  tool reads those and saves the files;
+- a way to share books. It hosts nothing and uploads nothing, and the files are
+  for you. Please do not share, resell or redistribute them or the links;
+- meant to undermine authors, or to override an author's choice about
+  downloads. Some authors offer a book only inside the BookFunnel app. This
+  project is for personal use and accessibility. If you would like a download for
+  a book that does not offer one, ask the author or BookFunnel support;
+- affiliated with or endorsed by BookFunnel.
+
+See the [disclaimer](#disclaimer-and-responsible-use) below.
 
 ## Install
 
@@ -43,8 +74,8 @@ blurred or replaced.
 Go to <https://my.bookfunnel.com>. Every book gets a coloured border and a key
 appears in the corner:
 
-- **Red** — BookFunnel marks the book restricted and gives it no download of its
-  own. This script can still save it.
+- **Red** — BookFunnel offers this book only inside its own app (no Download
+  button in the library). The panel works on its player page like any other book.
 - **Green** — downloads normally.
 
 ![Library with red and green borders and the key](docs/screenshots/library.jpg)
@@ -61,7 +92,7 @@ BookFunnel offers. Tick the ones you want:
 One ticked file is saved on its own. Several are saved together in a single
 `.zip`, so your Downloads folder stays tidy.
 
-### 3. Download a locked audiobook
+### 3. Audiobooks with no Download button
 
 Click **Open Blocked** in the key, or open a red-bordered book yourself. The
 player page gets the panel. Pick one:
@@ -74,7 +105,7 @@ player page gets the panel. Pick one:
 
 When it finishes, the panel says exactly what was saved:
 
-![A locked audiobook saved as an .m4b](docs/screenshots/locked-audiobook-done.jpg)
+![An audiobook saved as an .m4b](docs/screenshots/locked-audiobook-done.jpg)
 
 ### 4. Download everything at once
 
@@ -124,9 +155,10 @@ And this is Chrome's own download list after the two bulk runs: three of the
 
 ## Good to know
 
-- **You need your own BookFunnel account and books you have access to.** This
-  does not bypass payment or break encryption (there is none). It reads the
-  track list and download links the page already loads for you.
+- **You need your own BookFunnel account and books you have access to.** It does
+  not bypass a login, a payment or an access check, and it decrypts nothing. It
+  reads the track list and links the page already loads for your signed-in
+  account.
 - **"Unable to expand" in Archive Utility?** Fixed in this release: EPUBs are
   compressed inside the `.zip`, because macOS Archive Utility cannot open a zip
   that holds another zip uncompressed.
@@ -134,7 +166,7 @@ And this is Chrome's own download list after the two bulk runs: three of the
   code. That is why the script builds the files itself and saves them under
   their proper names.
 - **Please respect authors.** Keep what you bought for your own use.
-  See [Legal](#legal).
+  See the [disclaimer](#disclaimer-and-responsible-use).
 
 ---
 
@@ -145,9 +177,10 @@ And this is Chrome's own download list after the two bulk runs: three of the
 - **A Python pipeline** for audiobooks — builds tagged `.m4b` files for Plex,
   Apple Books, Prologue or Audiobookshelf, with duration checks.
 
-You need your own BookFunnel login. This does not bypass payment, and it does
-not break encryption — because there isn't any. It reads the track list and the
-download links the page already loads in your own logged-in session.
+You need your own BookFunnel login and a book your account has access to. It does
+not bypass a login, a payment or an access check, and it does not decrypt
+anything: it reads the track list and the links the page already loads in your
+own signed-in session.
 
 ---
 
@@ -203,9 +236,9 @@ says what it will do:
 - **nothing ticked** — the button is disabled.
 
 On your library page (`my.bookfunnel.com`) every book gets a coloured border:
-**red** for the ones BookFunnel marks restricted, which have no download of their
-own and need this tool (open the book and use the panel), and **green** for the
-ones that download normally. A small key in the corner shows the counts and can
+**red** for the ones BookFunnel offers only inside its own app (no Download button
+in the library; open the book and use the panel), and **green** for the ones that
+download normally. A small key in the corner shows the counts and can
 be dismissed with its ✕. The key's **Open Blocked** button opens every red book's
 player page in its own background tab, ready for the panel.
 
@@ -267,27 +300,25 @@ How it works, in one line each:
 
 ---
 
-## Why this works
+## How it works
 
-BookFunnel's web player is a thin interface over ordinary files:
+Nothing here is hidden or bypassed. BookFunnel's web player needs three things to
+play a book, and it loads them into your browser while you are signed in:
 
-1. The player page embeds a JavaScript array called `MANIFEST` — one entry per
-   chapter, with the title and duration.
-2. The page calls `/<book-id>/next?chapter=N`, which returns a **presigned URL**
-   to an MP3 on DigitalOcean Spaces.
-3. That MP3 is not encrypted, not segmented, and not watermarked per listener.
+1. The player page embeds a JavaScript array called `MANIFEST` with one entry per
+   chapter (title and duration).
+2. To play a chapter, the page calls `/<book-id>/next?chapter=N`, which returns a
+   time-limited **signed address** for that chapter's audio, issued to your
+   signed-in session.
+3. The audio arrives as ordinary MP3 data.
 
-So "app only" means "we removed the download button", not "the audio is
-protected". The audio streams to your browser as normal MP3 bytes; this tool
-collects the pointers and saves the bytes to disk.
+This tool makes the same requests the player makes and saves what comes back as
+a file you keep. For ebooks, the delivery page links to the finished `.epub` or
+`.pdf`, and the tool saves that. It works only for an account that already has the
+book; with no access, it gets nothing.
 
-Ebooks work the same way: the delivery page links to the finished `.epub` on
-`prfiles.bookfunnel.com`, which is a plain Apache directory serving the file
-with `content-type: application/epub+zip`.
-
-Signed URLs expire (BookFunnel issues them with a long but finite lifetime). If
-downloads start failing with HTTP 403, re-run `collect.js` for a fresh manifest,
-or use the userscript, which refreshes them on its own.
+Signed addresses expire. If downloads start failing with HTTP 403, reload the
+page or re-run `collect.js` for fresh ones; the userscript refreshes them itself.
 
 ---
 
@@ -540,15 +571,23 @@ percent-encoding, de-duplication and generated file names.
 
 ---
 
-## Legal
+## Disclaimer and responsible use
 
-Personal use, on devices you own — normally fine for content you paid for. Do not
-redistribute the files or the signed URLs.
+Use this only with **your own BookFunnel account**, for books you have access to,
+for **your own personal use** on your own devices. Do not share, upload, sell or
+otherwise redistribute the files or the signed links.
 
-Worth knowing: the author's own store page advertises *"listen in the BookFunnel
-app or download to your device"*, and BookFunnel delivers DRM-free by default. So
-if downloads are disabled, it's usually a setting someone flipped without
-realising it only inconveniences paying readers — worth telling them.
+- **Terms and laws differ.** Saving files may go against BookFunnel's terms of
+  service or an author's or publisher's wishes for particular titles, and
+  copyright and anti-circumvention laws vary by country. You are responsible for
+  how you use this tool and for following the laws and terms that apply to you.
+- **This is not legal advice.** If you are unsure, ask a qualified professional.
+- **No affiliation.** This project is independent of BookFunnel and is not
+  endorsed by it.
+- **No warranty.** It is provided "as is" under the [MIT License](LICENSE).
+- **Authors, publishers and BookFunnel:** if you have a concern about this
+  project, please [open an issue](https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/issues) or contact me through my GitHub
+  profile. I will read it and respond.
 
 ---
 
