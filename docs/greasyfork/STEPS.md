@@ -44,7 +44,9 @@ Greasy Fork only accepts an update when `@version` goes up, so bump it in the
 script header before pushing a change. Do not add `@updateURL` or `@downloadURL`
 pointing at GitHub: Greasy Fork rejects them.
 
-## 5. Tell me the new link
+## 5. Done
 
-The README still links the old script page (602430). Send me the new address and
-the README gets fixed.
+The script is published at
+<https://greasyfork.org/en/scripts/602959-bookfunnel-audiobook-ebook-downloader>
+and the README links to it. To change the page later, bump `@version` in the
+script, push, and Greasy Fork syncs it.

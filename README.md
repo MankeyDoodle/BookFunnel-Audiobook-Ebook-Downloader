@@ -5,13 +5,13 @@
 <p align="center">
   <a href="https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/actions/workflows/ci.yml"><img src="https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/actions/workflows/ci.yml/badge.svg" alt="tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
-  <img src="https://img.shields.io/badge/version-1.0.0-14695b.svg" alt="version 1.0.0">
+  <img src="https://img.shields.io/badge/version-1.0.1-14695b.svg" alt="version 1.0.1">
   <img src="https://img.shields.io/badge/tested%20with-Tampermonkey-00485B.svg" alt="tested with Tampermonkey">
 </p>
 
 # BookFunnel Audiobook + Ebook Downloader
 
-**Version 1.0.0 — first public release.**
+**Version 1.0.1** (first public release: 1.0.0).
 
 Save the books you **bought** from BookFunnel as ordinary files you keep:
 audiobooks as one chaptered `.m4b` (or `.mp3`, or titled chapter files), ebooks
@@ -24,7 +24,7 @@ session, needs no terminal, and does not re-encode anything.
    **[Tampermonkey](https://www.tampermonkey.net/)** in Chrome. Other managers
    that provide `GM_xmlhttpRequest` and `GM_download` may work but are untested.
 2. Install the script, from either place:
-   - **Greasy Fork:** <https://greasyfork.org/en/scripts/602430-bookfunnel-audiobook-downloader>
+   - **Greasy Fork:** <https://greasyfork.org/en/scripts/602959-bookfunnel-audiobook-ebook-downloader>
    - **This repository:** [`bookfunnel-downloader.user.js`](https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/raw/main/bookfunnel-downloader.user.js)
      (Tampermonkey offers to install it when you open the raw file)
 3. Open your library at <https://my.bookfunnel.com>, or any book's player or

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BookFunnel Audiobook + Ebook Downloader
 // @namespace    https://greasyfork.org/users/1560112
-// @version      1.0.0
+// @version      1.0.1
 // @description  Play the books you bought in the apps you like. Saves your BookFunnel audiobooks as one chaptered .m4b or .mp3 and your ebooks as EPUB or PDF, with bulk download and a library view showing which books have no Download button. No re-encoding. Open source on GitHub.
 // @author       MankeyDoodle
 // @homepageURL  https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader

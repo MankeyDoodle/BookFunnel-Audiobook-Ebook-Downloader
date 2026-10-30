@@ -4,6 +4,15 @@ All notable changes are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.0.1] - 2026-10-30
+
+### Changed
+- The one-line description now says what the script does for the reader, and
+  describes red library borders as books with no Download button. No change in
+  behaviour.
+- The Greasy Fork page address is now
+  <https://greasyfork.org/en/scripts/602959-bookfunnel-audiobook-ebook-downloader>.
+
 ## [1.0.0] - 2026-10-30
 
 First public release.
