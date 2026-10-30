@@ -5,13 +5,13 @@
 <p align="center">
   <a href="https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/actions/workflows/ci.yml"><img src="https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/actions/workflows/ci.yml/badge.svg" alt="tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
-  <img src="https://img.shields.io/badge/version-1.0.3-14695b.svg" alt="version 1.0.3">
+  <img src="https://img.shields.io/badge/version-1.0.4-14695b.svg" alt="version 1.0.4">
   <img src="https://img.shields.io/badge/tested%20with-Tampermonkey-00485B.svg" alt="tested with Tampermonkey">
 </p>
 
 # BookFunnel Audiobook + Ebook Downloader
 
-**Version 1.0.3** (first public release: 1.0.0).
+**Version 1.0.4** (first public release: 1.0.0).
 
 Save the books you **bought** from BookFunnel as ordinary files you keep:
 audiobooks as one chaptered `.m4b` (or `.mp3`, or titled chapter files), ebooks
@@ -162,6 +162,9 @@ And this is Chrome's own download list after the two bulk runs: three of the
 - **"Unable to expand" in Archive Utility?** Fixed in this release: EPUBs are
   compressed inside the `.zip`, because macOS Archive Utility cannot open a zip
   that holds another zip uncompressed.
+- **It goes easy on BookFunnel's servers.** At most three files are fetched at a
+  time (audiobooks in bulk: one book at a time), with a short pause between
+  files. A big batch takes a little longer for that reason.
 - **A download manager that ignores file names** saves audiobooks under a random
   code. That is why the script builds the files itself and saves them under
   their proper names.

@@ -56,6 +56,7 @@ Step-by-step directions with a screenshot for each step are in the
 
 - Use it only with your own account, for books you have access to, for your own personal use on your own devices.
 - Terms and laws differ by country. Saving files may go against BookFunnel's terms or an author's or publisher's wishes for some titles. You are responsible for how you use this and for following the laws and terms that apply to you. This is not legal advice.
+- It goes easy on BookFunnel's servers: at most three files at a time, with a short pause between them.
 - The script talks only to BookFunnel's own hosts and its storage hosts (the `@connect` lines in the header). It sends your data nowhere else.
 - Provided "as is" under the MIT license, without warranty.
 - Authors, publishers or BookFunnel with a concern: please [open an issue](https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/issues) or contact me through my GitHub profile. I will read it and respond.

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BookFunnel Audiobook + Ebook Downloader
 // @namespace    https://greasyfork.org/users/1560112
-// @version      1.0.3
+// @version      1.0.4
 // @description  Personal-use tool for your own BookFunnel account: saves the audiobooks (.m4b / .mp3) and ebooks (EPUB / PDF) you can already open there, so your own reader or audiobook app can use them. Not an exploit. Open source on GitHub.
 // @author       MankeyDoodle
 // @homepageURL  https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader
@@ -87,6 +87,7 @@
   var DOWNLOAD_TIMEOUT = 30 * 60 * 1000;     // a download the manager never reports on
   var CONCURRENCY = 3;
   var MAX_ATTEMPTS = 3;
+  var POLITE_DELAY = 300;                    // ms each worker waits between files: easy on BookFunnel's servers
 
   var PAGE_HOST = location.hostname;
   var PAGE_PATH = location.pathname;
@@ -1282,7 +1283,11 @@
         function step() {
           if (stopped || next >= items.length) { resolve(); return; }
           var index = next++;
-          Promise.resolve(worker(items[index], index)).catch(function () {}).then(step);
+          Promise.resolve(worker(items[index], index)).catch(function () {}).then(function () {
+            // a short pause before the next file, but none after the last one
+            if (stopped || next >= items.length) return null;
+            return sleep(POLITE_DELAY);
+          }).then(step);
         }
         step();
       });

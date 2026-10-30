@@ -4,6 +4,13 @@ All notable changes are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.0.4] - 2026-10-30
+
+### Changed
+- A short pause (0.3 s) between files, so big batches go easier on BookFunnel's
+  servers. At most three files are still fetched at a time, and bulk audiobooks
+  still run one book at a time.
+
 ## [1.0.3] - 2026-10-30
 
 ### Changed
