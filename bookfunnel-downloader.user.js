@@ -2,7 +2,7 @@
 // @name         BookFunnel Audiobook + Ebook Downloader
 // @namespace    https://greasyfork.org/users/1560112
 // @version      1.0.0
-// @description  Save the books you bought on BookFunnel as ordinary files. Audiobooks: one chaptered .m4b or .mp3, or titled chapter files in a .zip. Ebooks: EPUB, Kindle EPUB, Kobo EPUB, PDF. Marks locked vs normal books in your library (red / green) and can download them all in bulk. No re-encoding. Open source on GitHub.
+// @description  Play the books you bought in the apps you like. Saves your BookFunnel audiobooks as one chaptered .m4b or .mp3 and your ebooks as EPUB or PDF, with bulk download and a library view showing which books have no Download button. No re-encoding. Open source on GitHub.
 // @author       MankeyDoodle
 // @homepageURL  https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader
 // @supportURL   https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/issues
