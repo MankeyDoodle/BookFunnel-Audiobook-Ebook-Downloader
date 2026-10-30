@@ -1,3 +1,5 @@
+![BookFunnel Audiobook + Ebook Downloader](https://raw.githubusercontent.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/main/assets/banner.png)
+
 **Source code, issues and release notes: [https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader](https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader)**
 
 I paid for these books and wanted to read and listen to them in the apps I actually
