@@ -4,7 +4,7 @@ Everything you need is in this folder:
 
 | File | Where it goes |
 |---|---|
-| `additional-info.md` | Paste into **Default additional info** on the script's Admin page, with **Markdown** selected |
+| `additional-info.md` | Not pasted: give its raw GitHub address to **Default additional info** on the Admin page, with **Markdown** selected (step 3) |
 | `description.txt` | The one-line description. It is already the `@description` line in the script, so it fills in by itself; this copy is for reference |
 | the script | `https://raw.githubusercontent.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/main/bookfunnel-downloader.user.js` |
 
@@ -27,12 +27,20 @@ Everything you need is in this folder:
      "Permanent deletion" on the old page (7-day countdown, cancellable) or
      ask on the Greasy Fork forum.
 
-## 3. Add the page text
+## 3. Add the page text (it syncs from a file, you do not paste it)
 
-1. Open the new script's **Admin** tab.
-2. Under **Default additional info**, select **Markdown**.
-3. Paste all of `additional-info.md`, then press **Preview** to check the
-   pictures load, then save.
+The **Default additional info** field on the Admin tab takes the **address of a
+file**, not the text itself. Point it at the file in this repository:
+
+1. Open the script's **Admin** tab, find **Default additional info**.
+2. In the address box paste:
+   `https://raw.githubusercontent.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/main/docs/greasyfork/additional-info.md`
+3. Select **Markdown** (not HTML).
+4. Save, then check the script's public page shows the features list and the
+   screenshots.
+
+From then on the page text updates from the repository like the code does, so to
+change it you edit `additional-info.md` and push.
 
 ## 4. Optional: update on every push
 
