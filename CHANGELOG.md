@@ -4,6 +4,12 @@ All notable changes are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+- The library, confirm-step and bulk-download screenshots were retaken with the
+  current labels. Book titles, authors and covers are blurred or replaced.
+
 ## [1.0.4] - 2026-10-30
 
 ### Changed
