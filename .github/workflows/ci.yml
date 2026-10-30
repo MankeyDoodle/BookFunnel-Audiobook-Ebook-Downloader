@@ -1,0 +1,21 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install ffmpeg and unzip
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg unzip
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Syntax check, parser checks and packer checks
+        run: npm test

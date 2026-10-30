@@ -1,0 +1,26 @@
+# Changelog
+
+All notable changes are listed here. The format follows
+[Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
+[Semantic Versioning](https://semver.org/).
+
+## [1.0.0] - 2026-10-30
+
+First public release.
+
+### Added
+- **Audiobooks** from BookFunnel's player page: one combined `.mp3` or `.m4b`
+  with chapter marks, title/author/cover tags and a correct length, or every
+  chapter as a titled, tagged MP3 in one `.zip` folder. No re-encoding.
+- **Ebooks, PDFs and archives** from the delivery pages and the cloud reader:
+  EPUB, Kindle EPUB, Kobo EPUB, PDF and ZIP, with a tick box beside each file.
+  Several ticked files are saved together in one `.zip`.
+- **Library page highlighting**: red border for books BookFunnel marks
+  restricted (they need this tool), green for books that download normally,
+  with a key, an **Open Blocked** button, and **Download all ebooks** /
+  **Download all audiobooks** buttons (one `.m4b` per audiobook).
+- Stop and **Retry failed** buttons, per-file progress, honest error messages.
+- A Python pipeline (`download.py`) for building tagged `.m4b` files outside the
+  browser.
+- Test suites for the HTML parser and for the byte-level MP3 / M4B / ZIP
+  writers, checked against `ffprobe`, `ffmpeg`, `unzip` and Python's `zipfile`.

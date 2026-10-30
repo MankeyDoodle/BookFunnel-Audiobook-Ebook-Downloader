@@ -1,0 +1,23 @@
+{
+  "name": "bookfunnel-audiobook-ebook-downloader",
+  "version": "1.0.0",
+  "description": "Userscript that saves the audiobooks and ebooks you bought on BookFunnel as ordinary files.",
+  "private": true,
+  "license": "MIT",
+  "author": "MankeyDoodle",
+  "homepage": "https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader.git"
+  },
+  "bugs": {
+    "url": "https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/issues"
+  },
+  "scripts": {
+    "check": "node --check bookfunnel-downloader.user.js",
+    "test": "node --check bookfunnel-downloader.user.js && node test/parser-check.js && node test/pack-check.js --clean"
+  },
+  "devDependencies": {
+    "jsdom": "^25.0.1"
+  }
+}

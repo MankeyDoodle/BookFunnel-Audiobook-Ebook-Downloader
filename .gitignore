@@ -1,0 +1,13 @@
+node_modules/
+.tmp/
+test-out/
+__pycache__/
+.DS_Store
+*.log
+
+# outputs of the Python pipeline: they contain signed links and book data
+tracks.tsv
+meta.json
+*.m4b
+*.mp3
+raw/

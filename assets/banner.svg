@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" font-family="-apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0e2e2a"/><stop offset="1" stop-color="#14171a"/></linearGradient>
+  </defs>
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect x="0" y="0" width="14" height="640" fill="#14695b"/>
+  <g>
+    <rect x="70" y="92" width="92" height="92" rx="22" fill="#14695b"/>
+    <g transform="translate(86 108) scale(2.5)" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m16 6 4 14" />
+  <path d="M12 6v14" />
+  <path d="M8 8v12" />
+  <path d="M4 4v16" /></g>
+  </g>
+  <text x="70" y="262" font-size="74" font-weight="800" fill="#ffffff">BookFunnel</text>
+  <text x="70" y="338" font-size="58" font-weight="700" fill="#7fd1bd">Audiobook + Ebook</text>
+  <text x="70" y="406" font-size="58" font-weight="700" fill="#7fd1bd">Downloader</text>
+  <text x="72" y="470" font-size="27" fill="#c9d1d9">Save the books you bought as ordinary files:</text>
+  <text x="72" y="508" font-size="27" fill="#c9d1d9">chaptered .m4b / .mp3, EPUB and PDF.</text>
+  <text x="72" y="568" font-size="22" font-weight="600" fill="#8f9aa5">A userscript for Tampermonkey</text>
+  <g>
+  <rect x="740" y="96" width="230" height="300" rx="22" fill="#1d2126" stroke="#2f8f7b" stroke-width="10"/>
+  <g transform="translate(807.0 140) scale(4.0)" fill="none" stroke="#e9edf0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7a9 9 0 0 1 18 0v7a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3" /></g>
+  <text x="855.0" y="326" text-anchor="middle" font-size="30" font-weight="700" fill="#ffffff">Audiobooks</text>
+  <text x="855.0" y="362" text-anchor="middle" font-size="21" font-weight="500" fill="#aab4be">one .m4b per book</text>
+</g>
+  <g>
+  <rect x="1000" y="96" width="230" height="300" rx="22" fill="#1d2126" stroke="#2f8f7b" stroke-width="10"/>
+  <g transform="translate(1067.0 140) scale(4.0)" fill="none" stroke="#e9edf0" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v16" />
+  <path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /></g>
+  <text x="1115.0" y="326" text-anchor="middle" font-size="30" font-weight="700" fill="#ffffff">Ebooks</text>
+  <text x="1115.0" y="362" text-anchor="middle" font-size="21" font-weight="500" fill="#aab4be">EPUB and PDF</text>
+</g>
+  <g transform="translate(740 424)">
+    <rect width="490" height="112" rx="20" fill="#1d2126" stroke="#3a4048" stroke-width="3"/>
+    <g transform="translate(34 26) scale(2.5)" fill="none" stroke="#7fd1bd" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3" />
+  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+  <path d="m7 10 5 5 5-5" /></g>
+    <text x="118" y="54" font-size="29" font-weight="700" fill="#ffffff">Download all, in one click</text>
+    <text x="118" y="90" font-size="22" fill="#aab4be">Red borders need the tool</text>
+  </g>
+</svg>

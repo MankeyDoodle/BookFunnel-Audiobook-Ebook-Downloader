@@ -1,0 +1,45 @@
+name: Bug report
+description: Something did not download, or downloaded wrongly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Please do not paste cookies, signed download URLs, claim-link codes or your account email.**
+  - type: dropdown
+    id: page
+    attributes:
+      label: Which page were you on?
+      options:
+        - Library (my.bookfunnel.com)
+        - Audiobook player (play.bookfunnel.com)
+        - Cloud reader (read.bookfunnel.com)
+        - Delivery page (pr.bookfunnel.com)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Script version
+      description: The `@version` line in the script header
+      placeholder: "1.0.0"
+    validations:
+      required: true
+  - type: input
+    id: manager
+    attributes:
+      label: Browser and userscript manager (with versions)
+      placeholder: Chrome 130, Tampermonkey 5.x
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: panel
+    attributes:
+      label: Text shown in the panel (especially red error lines)
+      render: text

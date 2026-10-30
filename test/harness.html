@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><title>harness</title></head>
+<body>
+<h1>BookFunnel userscript harness</h1>
+<p>Mocks the player, the delivery pages, the file host and the File System Access API.</p>
+<p>Pick a scenario with the query string, e.g. <code>?host=read.bookfunnel.com&amp;path=/tdbzz18g8d</code></p>
+<script>
+(function () {
+  "use strict";
+
+  var params = new URLSearchParams(location.search);
+  window.__TEST_HOST = params.get("host") || "play.bookfunnel.com";
+  window.__TEST_PATH = params.get("path") || "/g192apldg8";
+  // Markup saved from the real site, so the parser meets real hrefs:
+  //   fixture  = page to install as this document (live-page parsing)
+  //   delivery = page the my.bookfunnel.com/<id>/download mock answers with
+  var FIXTURE = params.get("fixture");
+  var DELIVERY_FIXTURE = params.get("delivery");
+
+  /* ---------------- fake filesystem ---------------- */
+  var dirs = Object.create(null);
+  var files = Object.create(null);
+  window.__files = files;
+
+  function notFound() {
+    var e = new Error("A requested file or directory could not be found");
+    e.name = "NotFoundError";
+    return e;
+  }
+
+  function fileHandle(path, name) {
+    return {
+      kind: "file",
+      name: name,
+      getFile: function () {
+        if (!(path in files)) return Promise.reject(notFound());
+        return Promise.resolve(new File([files[path]], name));
+      },
+      createWritable: function () {
+        return Promise.resolve({
+          write: function (data) {
+            if (data instanceof Blob) {
+              return data.arrayBuffer().then(function (b) { files[path] = new Uint8Array(b); });
+            }
+            files[path] = new Uint8Array(data);
+            return Promise.resolve();
+          },
+          close: function () { return Promise.resolve(); },
+          abort: function () { delete files[path]; return Promise.resolve(); }
+        });
+      }
+    };
+  }
+
+  function dirHandle(path) {
+    return {
+      kind: "directory",
+      name: path.split("/").pop(),
+      getDirectoryHandle: function (name, opts) {
+        var p = path + "/" + name;
+        if (!(p in dirs)) {
+          if (!opts || !opts.create) return Promise.reject(notFound());
+          dirs[p] = true;
+        }
+        return Promise.resolve(dirHandle(p));
+      },
+      getFileHandle: function (name, opts) {
+        var p = path + "/" + name;
+        if (!(p in files) && !(opts && opts.create)) return Promise.reject(notFound());
+        return Promise.resolve(fileHandle(p, name));
+      },
+      removeEntry: function (name) {
+        delete files[path + "/" + name];
+        return Promise.resolve();
+      }
+    };
+  }
+
+  window.__root = dirHandle("ROOT");
+  window.showDirectoryPicker = function () {
+    window.__pickers = (window.__pickers || 0) + 1;
+    return Promise.resolve(window.__root);
+  };
+
+  /* ---------------- fake BookFunnel pages ----------------
+   * Markup is copied from the real pages, quoting included: delivery links
+   * contain spaces and are repeated several times, the desktop app variant
+   * uses the bookfunnel:// scheme, and the page carries its author and cover
+   * in meta tags rather than in the title.
+   */
+
+  var MANIFEST = [
+    { title: "Opening Credits", duration: 6 },
+    { title: "Introduction", duration: 189 },
+    { title: "Chapter 1", duration: 1972 },
+    { title: "Chapter 2: A/B — test?", duration: 1830 },
+    { title: "Outro", duration: 42 }
+  ];
+  var COVER = "https://bookfunnelimages.com/images/covers/aoyx85v9mz/cover_lg.jpg";
+
+  var AUDIO_PAGE = "<html><head><title>Scales and Steel (After Dark) by Amy Campbell</title></head><body>"
+    + '<img src="' + COVER + '">'
+    + "<scr" + "ipt>var MANIFEST = " + JSON.stringify(MANIFEST) + ";</scr" + "ipt>"
+    + "</body></html>";
+
+  var HTML_PAGE = "<html><head><title>Welcome to BookFunnel</title></head><body>My library</body></html>";
+
+  function deliveryHtml(opts) {
+    return "<!DOCTYPE html><html><head><meta charset='utf-8'>"
+      + "<meta name='author' content='" + opts.author + "' />"
+      + "<meta property='og:type' content='book' />"
+      + "<meta property='og:title' content='Download " + opts.title + "' />"
+      + "<meta property='og:image' content='https://bookfunnelimages.com/images/covers/"
+      + opts.cover + "/cover_md.jpg' />"
+      + "<title>Download " + opts.title + "</title></head><body>"
+      + "<nav><a href='http://bookfunnel.com/'>BookFunnel</a> <a href='#'>Menu</a></nav>"
+      + opts.links
+      + "<footer><a href='https://bookfunnel.com/privacy/'>Privacy</a></footer>"
+      + "</body></html>";
+  }
+
+  function ebookLink(code, name, extra) {
+    var base = "//prfiles.bookfunnel.com/" + code + "/";
+    return "<a role='button' href='" + base + name + "' title='Download EPUB File'>EPUB</a>"
+      + "<a href='bookfunnel://prfiles.bookfunnel.com/" + code + "/" + name + "'>" + code.toUpperCase() + "</a>"
+      + "<a href='" + base + name + "'>Download EPUB File</a>"
+      + (extra || "");
+  }
+
+  var EBOOK_DELIVERY = deliveryHtml({
+    title: "The Gilded Chronicles Volume 2",
+    author: "Amy Campbell",
+    cover: "i2cqlzu2j4",
+    links: ebookLink("codefo", "The Gilded Chronicles Volume 2 - Amy Campbell.epub")
+      + "<a href='//prfiles.bookfunnel.com/codefo/kindle/The Gilded Chronicles Volume 2 - Amy Campbell.epub'>KINDLE EPUB</a>"
+      + "<a href='//prfiles.bookfunnel.com/codefo/The Gilded Chronicles Volume 2 - Amy Campbell.kepub.epub'>KOBO EPUB</a>"
+      + "<a href='https://apps.apple.com/app/bookfunnel/id1479475087'>App</a>"
+      + "<a href='shareddocuments:///private/var/mobile/Downloads/'>On My iPhone</a>"
+  });
+
+  var PDF_DELIVERY = deliveryHtml({
+    title: "Candle Dragon 2 Coloring page",
+    author: "Ellen Million",
+    cover: "codethr77",
+    links: "<a href='//prfiles.bookfunnel.com/codethr/Candle Dragon 2 Coloring page - Ellen Million.pdf' "
+      + "title='Download PDF File'>Download PDF File</a>"
+      + "<a href='//prfiles.bookfunnel.com/codethr/Candle Dragon 2 Coloring page - Ellen Million.pdf'>PDF</a>"
+  });
+
+  // Audiobooks that BookFunnel only ships as one archive
+  var AUDIO_ARCHIVE_DELIVERY = deliveryHtml({
+    title: "Unicorn of Glass Audiobook",
+    author: "Elva Birch",
+    cover: "upse9507h7",
+    links: "<a href='https://my.bookfunnel.com/login?save=CPZNNJB'>Sign in</a>"
+      + "<a class='download' href='https://pr.bookfunnel.com/codeone/download_media'>Download the audio files</a>"
+  });
+
+  var LOGIN_PAGE = "<!DOCTYPE html><html><head><title>My BookFunnel</title></head><body>"
+    + "<h1>My BookFunnel</h1>"
+    + "<a href='https://my.bookfunnel.com/login?save=CPZNNJB'>Sign in</a>"
+    + "</body></html>";
+
+  function deliveryFor(id) {
+    if (/ac2duilnrv|pdf/.test(id)) return PDF_DELIVERY;
+    if (/upse9507h7|zip/.test(id)) return AUDIO_ARCHIVE_DELIVERY;
+    if (/^loginonly/.test(id)) return LOGIN_PAGE;
+    return EBOOK_DELIVERY;
+  }
+
+  // pull <id> out of the paths the script knows about
+  function idFromPath(host, path) {
+    var m;
+    if (host === "my.bookfunnel.com" && (m = path.match(/^\/([a-z0-9]+)\/download\/?$/))) return m[1];
+    if (host === "pr.bookfunnel.com" && (m = path.match(/^\/([a-z0-9]+)(?:\/download)?\/?$/))) return m[1];
+    if (host === "read.bookfunnel.com" && (m = path.match(/^\/(?:pdf\/)?([a-z0-9]+)/))) return m[1];
+    return null;
+  }
+
+  /* ---------------- network mocks ---------------- */
+  var realFetch = window.fetch.bind(window);
+
+  function jsonResponse(obj) {
+    return Promise.resolve(new Response(JSON.stringify(obj), {
+      status: 200, headers: { "Content-Type": "application/json" }
+    }));
+  }
+  function htmlResponse(html) {
+    return Promise.resolve(new Response(html, { status: 200, headers: { "Content-Type": "text/html" } }));
+  }
+
+  window.fetch = function (input, init) {
+    var url = typeof input === "string" ? input : input.url;
+    var m;
+
+    if (url.indexOf("/userscript.txt") === 0 || url.indexOf("/harness") === 0) {
+      return realFetch(input, init);
+    }
+    if ((m = url.match(/\/([a-z0-9]+)\/next\?chapter=(\d+)/))) {
+      window.__nextCalls = (window.__nextCalls || 0) + 1;
+      return jsonResponse({
+        status: "OK",
+        message: "",
+        url: "https://bookfunnel.nyc3.digitaloceanspaces.com/abc123/"
+          + ("000" + m[2]).slice(-4) + ".mp3?AWSAccessKeyId=KEY&Expires=1793038247&Signature=SIG"
+      });
+    }
+    if ((m = url.match(/\/([a-z0-9]+)\/download$/))) {
+      window.__downloadPageCalls = (window.__downloadPageCalls || 0) + 1;
+      return htmlResponse(deliveryFor(m[1]));
+    }
+    if ((m = url.match(/^\/([a-z0-9]+)$/))) {
+      if (m[1].indexOf("notabook") === 0) return htmlResponse(HTML_PAGE);
+      return htmlResponse(AUDIO_PAGE);
+    }
+    return realFetch(input, init);
+  };
+
+  window.__failOnce = {};      // file number -> number of forced 403s
+  window.__failAlways = {};    // file number -> always fail
+  window.__bytesCalls = 0;
+  window.__delay = 15;
+
+  // 1 epub, 2 kindle epub, 3 kobo epub, 4 pdf, 5 archive
+  function fileNumberFor(url) {
+    if (/download_media/.test(url)) return 5;
+    if (/\.kepub\.epub/.test(url)) return 3;
+    if (/\/kindle\//.test(url)) return 2;
+    if (/\.pdf$/.test(url)) return 4;
+    if (/\.epub$/.test(url)) return 1;
+    var m = url.match(/\/(\d{4})\.mp3/);
+    return m ? parseInt(m[1], 10) : 0;
+  }
+
+  function bytesFor(n) {
+    var size = 15000 + n * 500;
+    var buf = new Uint8Array(size);
+    buf.fill(n);
+    return buf.buffer;
+  }
+
+  window.GM_xmlhttpRequest = function (details) {
+    var url = details.url;
+    setTimeout(function () {
+      var m;
+      if (/bookfunnelimages\.com/.test(url)) {
+        details.onload({ status: 200, response: new Uint8Array(12000).fill(7).buffer });
+        return;
+      }
+      if ((m = url.match(/\/next\?chapter=(\d+)/))) {
+        window.__nextCalls = (window.__nextCalls || 0) + 1;
+        details.onload({
+          status: 200,
+          responseText: JSON.stringify({
+            status: "OK",
+            message: "",
+            url: "https://bookfunnel.nyc3.digitaloceanspaces.com/abc123/"
+              + ("000" + m[1]).slice(-4) + ".mp3?AWSAccessKeyId=KEY&Expires=1793038247&Signature=SIG"
+          })
+        });
+        return;
+      }
+      if ((m = url.match(/my\.bookfunnel\.com\/([a-z0-9]+)\/download/))) {
+        window.__downloadPageCalls = (window.__downloadPageCalls || 0) + 1;
+        if (window.__deliveryHtml) {
+          details.onload({ status: 200, responseText: window.__deliveryHtml });
+          return;
+        }
+        details.onload({ status: 200, responseText: deliveryFor(m[1]) });
+        return;
+      }
+      if (/prfiles\.bookfunnel\.com|download_media|digitaloceanspaces|\d{4}\.mp3/.test(url)) {
+        var n = fileNumberFor(url);
+        if (window.__failAlways[n]) { details.onload({ status: 403 }); return; }
+        if (window.__failOnce[n] > 0) {
+          window.__failOnce[n]--;
+          details.onload({ status: 403 });
+          return;
+        }
+        window.__bytesCalls++;
+        details.onload({ status: 200, response: bytesFor(n) });
+        return;
+      }
+      details.onload({ status: 404 });
+    }, window.__delay);
+  };
+
+  window.__clipboard = "";
+  window.GM_setClipboard = function (text) { window.__clipboard = text; };
+  window.GM_registerMenuCommand = function () {};
+
+  /* ---------------- download sink mocks ---------------- */
+  window.__downloads = [];
+  window.__anchorClicks = [];
+  window.__useGM_download = true;
+
+  window.GM_download = function (details) {
+    setTimeout(function () {
+      if (!window.__useGM_download) { details.onerror({ error: "not_supported" }); return; }
+      window.__downloads.push({ name: details.name, url: details.url });
+      details.onload({});
+    }, window.__delay);
+  };
+
+  HTMLAnchorElement.prototype.click = function () {
+    window.__anchorClicks.push({ name: this.download, href: this.href });
+  };
+
+  /* ---------------- test helpers ---------------- */
+  window.__shadow = function () {
+    var host = document.getElementById("bfdl-host");
+    return host && host.shadowRoot;
+  };
+  window.__text = function (sel) {
+    var sr = window.__shadow();
+    var node = sr && sr.querySelector(sel);
+    return node ? node.textContent.trim() : null;
+  };
+  window.__click = function (label) {
+    var sr = window.__shadow();
+    if (!sr) return "no panel";
+    var buttons = Array.prototype.slice.call(sr.querySelectorAll("button"));
+    var target = buttons.filter(function (b) { return b.textContent.indexOf(label) >= 0; })[0];
+    if (!target) return "no button: " + label;
+    target.click();
+    return "clicked " + target.textContent.trim();
+  };
+  window.__tracks = function () {
+    var sr = window.__shadow();
+    if (!sr) return [];
+    return Array.prototype.map.call(sr.querySelectorAll(".track"), function (row) {
+      return {
+        state: row.className.replace("track", "").trim(),
+        label: row.querySelector(".t").textContent,
+        badge: row.querySelector(".s").textContent
+      };
+    });
+  };
+  window.__filesNow = function () {
+    return Object.keys(window.__files).sort().map(function (p) {
+      return p + " (" + window.__files[p].length + " bytes)";
+    });
+  };
+  // wait until a run reports an end state
+  window.__settle = function () {
+    return new Promise(function (resolve) {
+      var tries = 0;
+      (function step() {
+        if (tries++ > 400) { resolve(window.__text(".status")); return; }
+        setTimeout(function () {
+          var s = window.__text(".status") || "";
+          if (/^(Done|Finished|Stopped|Everything|Could not|This page|BookFunnel sent)/.test(s)) resolve(s);
+          else step();
+        }, 25);
+      })();
+    });
+  };
+  window.__summary = function () {
+    return {
+      name: window.__text(".name"),
+      sub: window.__text(".sub"),
+      facts: window.__text(".facts"),
+      status: window.__text(".status"),
+      tracks: window.__tracks()
+    };
+  };
+
+  /* ---------------- load the userscript ---------------- */
+  var me = document.currentScript;
+  var id = idFromPath(window.__TEST_HOST, window.__TEST_PATH);
+
+  // The script reads the live document on a delivery page, so turn the harness
+  // page into one: its own markup (and this script's page fixtures, which are
+  // full of prfiles links) must not be left behind to be scanned.
+  function showDeliveryPage(html) {
+    var doc = new DOMParser().parseFromString(html, "text/html");
+    Array.prototype.forEach.call(document.head.querySelectorAll("meta, title"), function (n) { n.remove(); });
+    Array.prototype.forEach.call(doc.head.querySelectorAll("meta"), function (n) {
+      document.head.appendChild(document.importNode(n, true));
+    });
+    var title = doc.querySelector("title");
+    if (title) document.title = title.textContent;
+
+    document.body.innerHTML = "";
+    Array.prototype.forEach.call(doc.body.childNodes, function (n) {
+      document.body.appendChild(document.importNode(n, true));
+    });
+    if (me && me.parentNode) me.remove();
+  }
+
+  if (window.__TEST_HOST === "read.bookfunnel.com") {
+    // the cloud reader carries its own metadata block
+    var meta = document.createElement("script");
+    meta.textContent = 'var metadata = {\n'
+      + '  id:     "' + id + '",\n'
+      + '  title:  "The Gilded Chronicles Volume 2",\n'
+      + '  author: "Amy Campbell"\n'
+      + '};';
+    document.head.appendChild(meta);
+    if (me && me.parentNode) me.remove();
+  } else if (id && !FIXTURE) {
+    showDeliveryPage(deliveryFor(id));
+  }
+
+  function fixture(name) {
+    return fetch("/fixtures/" + name + ".html").then(function (r) { return r.text(); });
+  }
+
+  Promise.resolve()
+    .then(function () {
+      if (!FIXTURE) return null;
+      return fixture(FIXTURE).then(showDeliveryPage);
+    })
+    .then(function () {
+      if (!DELIVERY_FIXTURE) return null;
+      return fixture(DELIVERY_FIXTURE).then(function (html) { window.__deliveryHtml = html; });
+    })
+    .then(function () {
+      return fetch("/userscript.txt");
+    })
+    .then(function (r) { return r.text(); })
+    .then(function (src) {
+      src = src.replace("var PAGE_HOST = location.hostname;", "var PAGE_HOST = window.__TEST_HOST;")
+               .replace("var PAGE_PATH = location.pathname;", "var PAGE_PATH = window.__TEST_PATH;");
+      (0, eval)(src);
+      window.__loaded = true;
+    })
+    .catch(function (e) {
+      window.__loadError = String(e);
+    });
+})();
+</script>
+</body>
+</html>
