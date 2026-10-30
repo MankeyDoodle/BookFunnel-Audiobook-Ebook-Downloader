@@ -23,7 +23,7 @@ I made this because the BookFunnel app has far fewer accessibility and quality-o
   and a **red** border on books BookFunnel offers only inside its own app (no
   Download button). A key counts both.
 - **Bulk buttons** in that key: **Download all ebooks**, **Download all audiobooks**
-  (one `.m4b` per book) and **Open Blocked**, which opens the red books. The bulk
+  (one `.m4b` per book) and **Open app-only books**, which opens the red books. The bulk
   buttons ask for a second click before they start.
 - **Stop** and **Retry failed**, per-file progress and plain error messages.
 

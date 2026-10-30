@@ -4,6 +4,16 @@ All notable changes are listed here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses
 [Semantic Versioning](https://semver.org/).
 
+## [1.0.3] - 2026-10-30
+
+### Changed
+- The library key and its buttons use plainer wording: **Open app-only books**
+  (was "Open Blocked"), "app-only" and "with a Download button" (was "need this
+  tool" and "download normally"). Internal names and a code comment were
+  reworded to match. No change in behaviour.
+- The on-page screenshots in the documentation were taken with 1.0.2 and still
+  show the earlier labels.
+
 ## [1.0.2] - 2026-10-30
 
 ### Changed

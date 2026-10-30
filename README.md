@@ -5,13 +5,13 @@
 <p align="center">
   <a href="https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/actions/workflows/ci.yml"><img src="https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader/actions/workflows/ci.yml/badge.svg" alt="tests"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT license"></a>
-  <img src="https://img.shields.io/badge/version-1.0.2-14695b.svg" alt="version 1.0.2">
+  <img src="https://img.shields.io/badge/version-1.0.3-14695b.svg" alt="version 1.0.3">
   <img src="https://img.shields.io/badge/tested%20with-Tampermonkey-00485B.svg" alt="tested with Tampermonkey">
 </p>
 
 # BookFunnel Audiobook + Ebook Downloader
 
-**Version 1.0.2** (first public release: 1.0.0).
+**Version 1.0.3** (first public release: 1.0.0).
 
 Save the books you **bought** from BookFunnel as ordinary files you keep:
 audiobooks as one chaptered `.m4b` (or `.mp3`, or titled chapter files), ebooks
@@ -76,7 +76,7 @@ appears in the corner:
 
 - **Red** — BookFunnel offers this book only inside its own app (no Download
   button in the library). The panel works on its player page like any other book.
-- **Green** — downloads normally.
+- **Green** — has a normal Download button.
 
 ![Library with red and green borders and the key](docs/screenshots/library.jpg)
 
@@ -94,7 +94,7 @@ One ticked file is saved on its own. Several are saved together in a single
 
 ### 3. Audiobooks with no Download button
 
-Click **Open Blocked** in the key, or open a red-bordered book yourself. The
+Click **Open app-only books** in the key, or open a red-bordered book yourself. The
 player page gets the panel. Pick one:
 
 - **MP3** or **M4B** — one file for the whole book, with chapter marks, tags and
@@ -238,8 +238,8 @@ says what it will do:
 On your library page (`my.bookfunnel.com`) every book gets a coloured border:
 **red** for the ones BookFunnel offers only inside its own app (no Download button
 in the library; open the book and use the panel), and **green** for the ones that
-download normally. A small key in the corner shows the counts and can
-be dismissed with its ✕. The key's **Open Blocked** button opens every red book's
+have a Download button. A small key in the corner shows the counts and can
+be dismissed with its ✕. The key's **Open app-only books** button opens every red book's
 player page in its own background tab, ready for the panel.
 
 The key also has **Download all ebooks** and **Download all audiobooks** for the

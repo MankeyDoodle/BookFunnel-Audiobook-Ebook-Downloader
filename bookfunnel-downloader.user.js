@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         BookFunnel Audiobook + Ebook Downloader
 // @namespace    https://greasyfork.org/users/1560112
-// @version      1.0.2
+// @version      1.0.3
 // @description  Personal-use tool for your own BookFunnel account: saves the audiobooks (.m4b / .mp3) and ebooks (EPUB / PDF) you can already open there, so your own reader or audiobook app can use them. Not an exploit. Open source on GitHub.
 // @author       MankeyDoodle
 // @homepageURL  https://github.com/MankeyDoodle/BookFunnel-Audiobook-Ebook-Downloader
@@ -35,8 +35,9 @@
  *
  * Audiobooks: the player page embeds a MANIFEST array of chapters, and
  *     /<book-id>/next?chapter=N
- * hands back a presigned URL to that chapter's MP3. The MP3s are not encrypted,
- * segmented or watermarked; the signature in the URL is the only authorisation.
+ * hands back a time-limited signed address for that chapter's audio, issued to
+ * your signed-in session. The audio arrives as ordinary MP3 data. This script
+ * makes the same requests the player makes and saves what comes back.
  *
  * Ebooks and PDFs: the delivery page offers the finished file directly, at
  * prfiles.bookfunnel.com/<link>/<Title> - <Author>.epub (and .kepub.epub,
@@ -2060,7 +2061,7 @@
 
     var rows = [];
     var boxes = [];
-    var locked = false;
+    var busy = false;
 
     function chosen() {
       return boxes.map(function (b, i) { return b.checked ? i : -1; })
@@ -2069,7 +2070,7 @@
 
     // the Download button says what it will do, and cannot run on nothing
     function refresh() {
-      boxes.forEach(function (b) { b.disabled = locked; });
+      boxes.forEach(function (b) { b.disabled = busy; });
       if (!book || book.kind === 'audio') return;
       var n = chosen().length;
       var total = book.items.length;
@@ -2077,7 +2078,7 @@
         : n === 0 ? 'Tick the files you want'
           : n === 1 ? 'Download 1 file'
             : 'Download ' + n + ' files as one .zip';
-      dlBtn.disabled = locked || n === 0;
+      dlBtn.disabled = busy || n === 0;
     }
 
     function openPanel() {
@@ -2122,7 +2123,7 @@
           box.addEventListener('change', refresh);
           // the whole row is the target, not only the small box
           row.addEventListener('click', function (e) {
-            if (locked || e.target === box) return;
+            if (busy || e.target === box) return;
             box.checked = !box.checked;
             refresh();
           });
@@ -2201,13 +2202,13 @@
       selected: chosen,
       setRunning: function (active) {
         stopBtn.style.display = active ? 'block' : 'none';
-        locked = active;
+        busy = active;
         allButtons.forEach(function (btn) { btn.disabled = active; });
         refresh();
         if (active) fill.style.width = '0';          // a finished run keeps its bar full
       },
       lock: function (on) {
-        locked = on;
+        busy = on;
         allButtons.forEach(function (btn) { btn.disabled = on; });
         refresh();
       },
@@ -2276,14 +2277,13 @@
   }
 
   /* ------------------------------------------------------------------ *
-   * library: which books BookFunnel will hand over and which need this tool
+   * library: which books have a Download button and which are app-only
    * ------------------------------------------------------------------ */
 
-  // A library entry is "locked" when BookFunnel marks it restricted or gives it
-  // no download address: its own Download button does nothing, and the player
-  // page plus this script is the way to get it. Everything else downloads
-  // normally from the library.
-  function isLockedSlot(slot) {
+  // A library entry is "app-only" when BookFunnel offers it without a Download
+  // button (no download address in the library). It still opens in the player
+  // like any other book. Everything else has a normal Download button.
+  function isAppOnlySlot(slot) {
     return slot.getAttribute('data-is-restricted') === 'true' || !slot.getAttribute('data-dl-url');
   }
 
@@ -2536,7 +2536,7 @@
     var style = document.createElement('style');
     style.id = 'bfdl-lib-style';
     style.textContent =
-      '.library-slot[data-bfdl="locked"] .book-container{outline:10px solid #e5484d;outline-offset:-4px;border-radius:8px}' +
+      '.library-slot[data-bfdl="app-only"] .book-container{outline:10px solid #e5484d;outline-offset:-4px;border-radius:8px}' +
       '.library-slot[data-bfdl="open"] .book-container{outline:10px solid #2e9e5b;outline-offset:-4px;border-radius:8px}';
     document.head.appendChild(style);
 
@@ -2561,24 +2561,24 @@
       '.st{display:none;margin-top:10px;font-size:14px;font-weight:600;line-height:1.4;color:#c9d1d9;overflow-wrap:anywhere}'));
     var box = el('div', { class: 'l' });
     var rows = el('div');
-    var lockedRow = el('div', { class: 'k' });
-    var lockedSwatch = el('span', { class: 'sw' });
-    lockedSwatch.style.background = '#e5484d';
-    var lockedText = el('span');
-    lockedRow.appendChild(lockedSwatch);
-    lockedRow.appendChild(lockedText);
+    var appOnlyRow = el('div', { class: 'k' });
+    var appOnlySwatch = el('span', { class: 'sw' });
+    appOnlySwatch.style.background = '#e5484d';
+    var appOnlyText = el('span');
+    appOnlyRow.appendChild(appOnlySwatch);
+    appOnlyRow.appendChild(appOnlyText);
     var openRow = el('div', { class: 'k' });
     var openSwatch = el('span', { class: 'sw' });
     openSwatch.style.background = '#2e9e5b';
     var openText = el('span');
     openRow.appendChild(openSwatch);
     openRow.appendChild(openText);
-    rows.appendChild(lockedRow);
+    rows.appendChild(appOnlyRow);
     rows.appendChild(openRow);
-    var goBtn = el('button', { class: 'go' }, 'Open Blocked');
+    var goBtn = el('button', { class: 'go' }, 'Open app-only books');
     goBtn.addEventListener('click', function () {
       var urls = [];
-      Array.prototype.forEach.call(document.querySelectorAll('.library-slot[data-bfdl="locked"]'), function (slot) {
+      Array.prototype.forEach.call(document.querySelectorAll('.library-slot[data-bfdl="app-only"]'), function (slot) {
         var url = slotOpenUrl(slot);
         if (url && urls.indexOf(url) < 0) urls.push(url);
       });
@@ -2596,7 +2596,7 @@
     rows.appendChild(stopBtn);
     rows.appendChild(statusEl);
 
-    var counts = { eb: 0, ab: 0, locked: 0 };
+    var counts = { eb: 0, ab: 0, appOnly: 0 };
     var running = false, stopFlag = false, armed = null, armTimer = null;
 
     function openSlots(kind) {
@@ -2613,7 +2613,7 @@
         : counts.ab ? 'Download all audiobooks (' + counts.ab + ')' : 'Download all audiobooks';
       ebBtn.disabled = running || !counts.eb;
       abBtn.disabled = running || !counts.ab;
-      goBtn.disabled = running || !counts.locked;
+      goBtn.disabled = running || !counts.appOnly;
       stopBtn.style.display = running ? 'block' : 'none';
     }
 
@@ -2667,22 +2667,22 @@
     document.body.appendChild(host);
 
     function paint() {
-      var locked = 0, open = 0;
+      var appOnly = 0, open = 0;
       Array.prototype.forEach.call(document.querySelectorAll('.library-slot'), function (slot) {
-        var state = isLockedSlot(slot) ? 'locked' : 'open';
+        var state = isAppOnlySlot(slot) ? 'app-only' : 'open';
         if (slot.getAttribute('data-bfdl') !== state) slot.setAttribute('data-bfdl', state);
-        if (state === 'locked') locked++; else open++;
+        if (state === 'app-only') appOnly++; else open++;
       });
-      lockedText.textContent = '';
-      lockedText.appendChild(el('span', { class: 'n' }, String(locked)));
-      lockedText.appendChild(document.createTextNode(' need this tool'));
-      lockedText.appendChild(el('span', { class: 'd' }, 'red border: open the book, use the panel'));
+      appOnlyText.textContent = '';
+      appOnlyText.appendChild(el('span', { class: 'n' }, String(appOnly)));
+      appOnlyText.appendChild(document.createTextNode(' app-only'));
+      appOnlyText.appendChild(el('span', { class: 'd' }, 'red border: no Download button in the library'));
       openText.textContent = '';
       openText.appendChild(el('span', { class: 'n' }, String(open)));
-      openText.appendChild(document.createTextNode(' download normally'));
+      openText.appendChild(document.createTextNode(' with a Download button'));
       openText.appendChild(el('span', { class: 'd' }, 'green border'));
-      goBtn.textContent = locked ? 'Open Blocked (' + locked + ')' : 'Open Blocked';
-      counts.locked = locked;
+      goBtn.textContent = appOnly ? 'Open app-only books (' + appOnly + ')' : 'Open app-only books';
+      counts.appOnly = appOnly;
       counts.eb = openSlots('eb').length;
       counts.ab = openSlots('ab').length;
       labels();

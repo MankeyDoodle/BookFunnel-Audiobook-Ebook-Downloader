@@ -1,6 +1,6 @@
 {
   "name": "bookfunnel-audiobook-ebook-downloader",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Userscript that saves the audiobooks and ebooks you bought on BookFunnel as ordinary files.",
   "private": true,
   "license": "MIT",
